@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+    
+    
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    
+    <http entry-point-ref="restAuthenticationEntryPoint">
+        <intercept-url pattern="/index.html" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING, ROLE_HO, ROLE_BODEREL" />
+        <intercept-url pattern="/index.html*" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING, ROLE_HO, ROLE_BODEREL" />
+        <intercept-url pattern="/api/dashboard**" access="ROLE_ADMIN, ROLE_FO" />
+        <intercept-url pattern="/index.html**" access="ROLE_*" />
+<!--        <intercept-url pattern="/role/**" access="ROLE_KASIR, ROLE_ADMIN" />-->
+        <intercept-url pattern="/page-404.html*" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/pages/**" access="ROLE_KASIR" />
+        <intercept-url pattern="/config/**" access="ROLE_KASIR, ROLE_ADMIN" />
+        <intercept-url pattern="/config*" access="ROLE_KASIR, ROLE_ADMIN" />
+        <intercept-url pattern="/api/master/pegawai/*" access="ROLE_MASTER_PEGAWAI_ADD, ROLE_MASTER_PEGAWAI_EDIT, ROLE_MASTER_PEGAWAI_DELETE" />
+        <intercept-url pattern="/api/transaksi/ticket-issued/**" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR" />
+        <intercept-url pattern="/api/transaksi/ar_invoice/**" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/api/transaksi/bahan/**" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/api/transaksi/ar_tagihan/**" access="ROLE_ADMIN, ROLE_KASIR, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/api/kasir/ar_receipt/**" access="ROLE_ADMIN, ROLE_KASIR, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/api/boderel/**" access="ROLE_ADMIN, ROLE_BODEREL, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/api/accounting/acc-jurnal/**" access="ROLE_ADMIN, ROLE_ACCOUNTING" />
+        <intercept-url pattern="/homepage/**" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING, ROLE_HO, ROLE_BODEREL" />
+        <intercept-url pattern="/img/**" access="ROLE_ADMIN, ROLE_FO, ROLE_KASIR, ROLE_ACCOUNTING, ROLE_HO, ROLE_BODEREL" />
+        <intercept-url pattern="/login.html*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+        
+        <intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <form-login login-page="/login.html" 
+                    default-target-url="/index.html" 
+                    authentication-failure-url="/login.html?error=1"
+                    always-use-default-target="true"/>
+        <logout invalidate-session="true" logout-success-url="/login.html" 
+                logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID"/>
+        
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false" expired-url="/login.html"/>
+        </session-management>
+    </http>
+    
+    <beans:bean id="restAuthenticationEntryPoint" class="com.greatsoft.security.AjaxAwareLoginUrlAuthenticationEntryPoint">
+        <beans:constructor-arg value="/login.html" />
+    </beans:bean>
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref='myUserDetailsService' >
+            <password-encoder ref="encoder" />  
+        </authentication-provider>
+    </authentication-manager>
+    
+    <beans:bean id="myUserDetailsService"
+                class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="enableAuthorities" value="false"/>
+        <beans:property name="enableGroups" value="true"/>
+        <beans:property name="usersByUsernameQuery">
+            <beans:value>
+                select username,password,active
+                from c_security_user
+                where username = ?
+            </beans:value>
+        </beans:property>
+        <beans:property name="groupAuthoritiesByUsernameQuery">
+            <beans:value>
+                select r.id, r.name as group_name, 'ROLE_'||replace(p.permission_value, 'ROLE_', '') as authority
+                from c_security_user u
+                inner join c_security_role r on u.id_role = r.id
+                inner join c_security_role_permission rp on rp.id_role = r.id
+                inner join c_security_permission p on rp.id_permission = p.id
+                where username = ?
+            </beans:value>
+        </beans:property>
+    </beans:bean>
+    <beans:bean id="encoder"  
+                class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">  
+        <beans:constructor-arg name="strength" value="10" />  
+    </beans:bean>  
+</beans:beans>

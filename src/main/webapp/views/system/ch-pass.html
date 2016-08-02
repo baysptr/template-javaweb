@@ -1,0 +1,110 @@
+<!--
+
+    Copyright (C) 2011 ArtiVisi Intermedia <info@artivisi.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!-- BEGIN TAB PORTLET-->
+<div class="portlet box blue" >
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-user"></i>Ganti Password
+        </div>
+<!--        <div class="tools">
+            <a href="javascript:;" class="collapse"></a>
+        </div>-->
+    </div>
+    <div class="portlet-body form">
+        <!-- BEGIN FORM-->
+        <form class="form-horizontal" name="formEdit">
+            <div class="form-body">
+                <!--/row-->
+<!--                <div class="row">
+                    <div class="col-xs-1">
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="photo">
+                                <img src="data:image/jpeg;base64,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" width="240" height="240" alt="Photo"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="username">Username :</label>
+                            <div class="col-xs-8">                     
+                                <input class="form-control" type="text" id="username" name="username" placeholder="Nama User" ng-model="userinfo.user" required ui-validate="{usernameAvailable: isUsernameAvailable}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="fullname">Group :</label>
+                            <div class="col-xs-8">                     
+                                <input class="form-control" type="text" id="groupName" name="groupName" placeholder="Nama Lengkap" ng-model="userinfo.group" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group" ng-class="{error: formEdit.oldPass.$invalid}">
+                            <label class="control-label col-xs-4" for="oldPass">Password Lama :</label>
+                            <div class="col-xs-6">                     
+                                <input class="form-control" type="password" id="oldPass" name="oldPass" placeholder="Password Lama" ng-model="currentUser.oldPass" required>
+                            </div>
+                            <span ng-show="formEdit.oldPass.$error.required" class="help-block col-xs-2">Harus diisi</span>
+                            <span ng-show="oldPasswordNotValid" class="help-block col-xs-2">Password tidak sesuai</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group" ng-class="{error: formEdit.newPass.$invalid}">
+                            <label class="control-label col-xs-4" for="newPass">Password Baru :</label>
+                            <div class="col-xs-6">                     
+                                <input class="form-control" type="password" id="newPass" name="newPass" placeholder="Password Baru" ng-model="currentUser.newPass" required>
+                            </div>
+                            <span ng-show="formEdit.newPass.$error.required" class="help-block col-xs-2">Harus diisi</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group" ng-class="{error: formEdit.confirmPass.$invalid}">
+                            <label class="control-label col-xs-4" for="confirmPass"> Konfirmasi Password :</label>
+                            <div class="col-xs-6">                     
+                                <input class="form-control" type="password" id="confirmPass" name="confirmPass" placeholder="Konfirmasi Password Baru" ng-model="currentUser.confirmPass" required>
+                            </div>
+                            <span ng-show="formEdit.confirmPass.$error.required" class="help-block col-xs-2">Harus diisi</span>
+                        </div>
+                    </div>
+                </div>
+                <!--/row-->
+            </div> 
+            <div class="form-actions fluid">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="submit" class="btn green btn-primary" ng-click="update()" ng-disabled="isClean() || formEdit.$invalid">Simpan <span class="glyphicon glyphicon-save"/></button>
+                            <button type="button" class="btn red btn-default" ng-click="batal()">Batal <span class="fa fa-times"/></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM -->
+    </div>
+</div>

@@ -1,0 +1,26 @@
+{
+  "name": "safira-ticketing-angular",
+  "version": "0.0.0",
+  "authors": [
+    "Greatsoft Indonesia"
+  ],
+  "description": "Modul Ticketing Safira Tour & Travel",
+  "main": "index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "homepage": "http://shafira-tours.com/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "angular": "~1.2.16"
+  }
+}

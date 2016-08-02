@@ -1,0 +1,107 @@
+<!--test-->
+<div class="portlet box blue-hoki">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-gift"></i>Kota
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="panel-body">
+                    <div class=" form-group input-group">
+                        <input id="search" type="text" class="col-xs-2 form-control" ng-model="search" ng-keypress="$event.keyCode==13? reloadData(): undefined"placeholder="Masukkan pencarian" autofocus>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="reloadData()"><i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1">No</th>
+                                <th>Nama Kota</th>
+                                <th>Kode</th>
+                                <th class="col-xs-2">
+                                    <button type="button" class="btn-right btn btn-primary btn-sm btn-block" ng-click="clear()"  data-toggle="modal" data-target="#formModal">
+                                        <span class="glyphicon glyphicon-plus-sign"></span>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>   
+                        <tbody>
+                            <tr ng-repeat="c in dataPage.content" >
+                                <td>{{$index + 1}}</td>
+                                <td>{{c.nama}}</td>
+                                <td>{{c.kode}}</td>
+                                <td class="center">
+                                    <a href="" ng-click="edit(c)">
+                                        <i class="glyphicon glyphicon-edit"></i> 
+
+                                    </a>  &nbsp;
+                                    <a href="" ng-click="remove(c)">
+                                        <i class="glyphicon glyphicon-remove"></i> 
+
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div align="center" ng-show="dataPage.totalPages > 1">
+                        <pagination total-items="paging.totalItems" ng-model="paging.currentPage" items-per-page="paging.maxSize" max-size="10" class="pagination-sm" boundary-links="true" ng-change="reloadData()" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+                        <pre>Page: {{paging.currentPage}} / {{paging.maxPage}}</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <form class="form-horizontal" name="formDialog">
+                    <div class="panel panel-default" style="margin:5px">
+                        <div class="form-group" style="padding-left: 30px; padding-right: 30px">
+                            <h4 style="padding-left: 45px"><b>{{formTitle}}</b></h4>
+                            <hr>
+                        </div>
+                        <div class="panel-body" style="padding: 0 0 0 0">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-4">
+                                    <label class="control-label" for="kode" >Kode</label>
+                                </div>
+                                <div class="col-xs-6" ng-class="{error: formDialog.kode.$invalid}">
+                                    <input name="kode" type="text" class="form-control" id="kode" ng-model="currentRecord.kode" required/>
+                                    <span style="float:right; color:white" class="help-block label label-danger" ng-show="formDialog.kode.$error.required">
+                                        Harus Diisi
+                                    </span>
+                                    <span style="float:right; color:white" class="help-block label label-danger" ng-show="isKodeExists">
+                                        Kode sudah terpakai
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-4">
+                                    <label class="control-label" for="nama">Nama</label>
+                                </div>
+                                <div class="col-xs-8" ng-class="{error: formDialog.nama.$invalid}">
+                                    <input name="nama" type="text" class="form-control" id="nama" ng-model="currentRecord.nama" required autofocus/>
+                                    <span style="float:right; color:white" class="help-block label label-danger" ng-show="formDialog.nama.$error.required">
+                                        Harus Diisi
+                                    </span>
+                                    <span style="float:right; color:white" class="help-block label label-danger" ng-show="isNameExists">
+                                        Nama sudah terpakai
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-offset-4 col-xs-8">
+                                    <button type="button" class="btn btn-primary" ng-disabled="isClean() || formDialog.$invalid" ng-click="save()">Simpan</button>
+                                    <button type="button" class="btn btn-default" ng-click="clear()">Batal</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

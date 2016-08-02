@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- 
+    Membaca file jdbc.properties.
+    Isinya akan digunakan untuk mengisi variabel ${nama.variabel}
+    -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    
+    <!-- 
+    Melakukan scanning terhadap annotation : 
+    - @Repository
+    - @Service
+    - @Controller
+    - @Component
+    Class yang memiliki annotation di atas 
+    akan diinstankan dan diisikan dependensinya
+    -->
+    <context:component-scan base-package="com.greatsoft.service, com.greatsoft.dao.jdbc, com.greatsoft.dao" />
+    <jpa:repositories base-package="com.greatsoft.dao" />
+    <tx:annotation-driven />
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+              destroy-method="close" p:driverClassName="${jdbc.driver}" p:url="${jdbc.url}"
+              p:username="${jdbc.username}" p:password="${jdbc.password}" p:maxWait="40000"
+              p:maxActive="80" p:maxIdle="20" p:initialSize="1"/>
+    
+<!--    <bean id="dsAccess" class="org.apache.commons.dbcp.BasicDataSource"
+              destroy-method="close" p:driverClassName="${db-access.driver}" p:url="${db-access.url}"
+              p:username="${db-access.username}" p:password="${db-access.password}" p:maxWait="40000"
+              p:maxActive="80" p:maxIdle="20" p:initialSize="1"/>-->
+
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager"
+              id="transactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
+    </bean>
+
+    <bean id="entityManagerFactory"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.greatsoft.domain" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="${hibernate.dialect}" />
+                <property name="showSql" value="false" />
+                <property name="generateDdl" value="true" />
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop> 
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="facadeMonitoringAdvisor" class="net.bull.javamelody.MonitoringSpringAdvisor">
+            <property name="pointcut">
+                    <bean class="net.bull.javamelody.MonitoredWithInterfacePointcut">
+                            <property name="interfaceName" value="com.greatsoft.service.MonitoredService" />
+                    </bean>
+            </property>
+    </bean>
+    <bean class="org.flywaydb.core.Flyway" id="flyway" init-method="migrate">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="locations" value="db/migration/"/>
+        <property name="initOnMigrate" value="true"/>
+    </bean>
+    <!-- Hibernate Statistics Monitoring -->
+    <!-- Publishing session factory to be able view statistics -->
+    
+    
+    <bean id="sessionFactory" factory-bean="entityManagerFactory"
+              factory-method="getSessionFactory" />
+<!--    <bean id="hibernateStatisticsMBean" class="org.hibernate.jmx.StatisticsService">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="mbeanExporter" class="org.springframework.jmx.export.MBeanExporter">
+        <property name="beans">
+            <map>
+                <entry key="SpringBeans:name=hibernateStatisticsMBean"
+                                       value-ref="hibernateStatisticsMBean" />
+            </map>
+        </property>
+    </bean>-->
+
+    <context:mbean-server />
+    
+    <!-- 
+    messageSource, berisi:
+    - pesan error
+    - label 
+    - dsb yang mungkin diedit user atau bilingual 
+    -->
+    <!--    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>errors</value>
+            </list>
+        </property>
+    </bean>-->
+
+</beans>

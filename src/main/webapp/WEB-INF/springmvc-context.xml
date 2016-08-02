@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="org.springframework.data.web.PageableArgumentResolver" />
+            <!--<bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />-->
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+    <mvc:default-servlet-handler />
+
+    <context:component-scan base-package="com.greatsoft.web" />
+    
+    <!-- mengganti default servletnya Tomcat dan Jetty -->
+    <!-- ini diperlukan kalau kita mapping DispatcherServlet ke / -->
+    <!-- sehingga tetap bisa mengakses folder selain WEB-INF, misalnya img, 
+    css, js -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="order" value="-1"></property>
+        <property name="urlPathHelper">
+            <bean class="com.greatsoft.helper.UrlPathHelperFixed"/>
+        </property>
+    </bean> 
+    <bean id="jasperViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location" value="classpath:jasper-views.xml"/>
+        <property name="order" value="0"/>
+    </bean>
+    <bean id="jstlViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/templates/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="1"/>
+    </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--        Maksimal Upload 2 MB -->
+        <property name="maxUploadSize" value="2000000" />
+    </bean>
+    
+</beans>
+
+    
