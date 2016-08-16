@@ -5,5 +5,5 @@
 
 Testing program
 ### database, add credentials user in postgresql:
-  ###user: test
-  ###pass: test
+###user: test
+###pass: test
